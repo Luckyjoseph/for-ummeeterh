@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ummeeterh — a project written just for you</title>
+<meta name="theme-color" content="#0a0010">
+<meta property="og:title" content="Ummeeterh, I built this for you 💜">
+<meta property="og:description" content="A tiny piece of what I do, written in code.">
+<style>
+:root{--p:#9b30ff;--p2:#c77dff;--r:#ff1744;--r2:#ff4d6d;--k:#07000d;--glass:rgba(255,255,255,.05)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--k);color:#f3e9ff;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;overflow-x:hidden}
+canvas#bg{position:fixed;inset:0;z-index:0}
+.aurora{position:fixed;inset:-20%;z-index:0;filter:blur(90px);opacity:.55;pointer-events:none;
+background:radial-gradient(40% 40% at 20% 30%,rgba(155,48,255,.6),transparent),radial-gradient(35% 35% at 80% 20%,rgba(255,23,68,.45),transparent),radial-gradient(45% 45% at 60% 85%,rgba(110,20,200,.5),transparent);animation:drift 18s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(4%,-3%) rotate(8deg) scale(1.1)}}
+main,section{position:relative;z-index:2}
+#gate{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%,#1a0030,#050008 70%);transition:opacity 1.2s,visibility 1.2s;text-align:center;padding:24px}
+#gate.out{opacity:0;visibility:hidden}
+.heart{font-size:64px;animation:beat 1.2s infinite;filter:drop-shadow(0 0 25px var(--r))}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.25)}30%{transform:scale(1)}45%{transform:scale(1.18)}}
+#gate h1{font-size:clamp(22px,5vw,38px);font-weight:300;letter-spacing:.3em;margin:22px 0 8px;text-transform:uppercase}
+#gate p{opacity:.65;margin-bottom:34px;font-size:15px}
+.btn{position:relative;border:0;color:#fff;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:14px;padding:16px 38px;border-radius:50px;cursor:pointer;background:linear-gradient(135deg,var(--p),var(--r));box-shadow:0 0 30px rgba(255,23,68,.45),0 0 60px rgba(155,48,255,.35);transition:transform .25s,box-shadow .25s}
+.btn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 0 45px rgba(255,23,68,.7),0 0 90px rgba(155,48,255,.55)}
+.btn.ghost{background:transparent;border:1px solid var(--p2);box-shadow:none}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px}
+.tag{letter-spacing:.5em;font-size:12px;text-transform:uppercase;color:var(--p2);margin-bottom:22px}
+.name{font-size:clamp(46px,12vw,150px);font-weight:900;line-height:1;letter-spacing:-.03em;background:linear-gradient(100deg,#fff 0%,var(--p2) 30%,var(--r2) 60%,var(--p) 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite;filter:drop-shadow(0 0 30px rgba(155,48,255,.5))}
+@keyframes shine{to{background-position:-250% 0}}
+.name span{display:inline-block;opacity:0;transform:translateY(60px) rotateX(-90deg);animation:rise .9s cubic-bezier(.2,.9,.3,1.2) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+.sub{margin-top:26px;font-size:clamp(16px,2.4vw,22px);max-width:640px;opacity:.85;line-height:1.6;min-height:3.4em}
+.scroll{margin-top:50px;font-size:12px;letter-spacing:.3em;opacity:.6;animation:bob 2s infinite}
+@keyframes bob{50%{transform:translateY(10px)}}
+.wrap{max-width:1050px;margin:0 auto;padding:110px 22px}
+h2{font-size:clamp(28px,5vw,52px);font-weight:800;margin-bottom:12px;letter-spacing:-.02em}
+h2 em{font-style:normal;background:linear-gradient(90deg,var(--p2),var(--r2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{opacity:.7;margin-bottom:44px;max-width:640px;line-height:1.7}
+.reveal{opacity:0;transform:translateY(50px);transition:all 1s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.term{background:rgba(8,0,16,.82);border:1px solid rgba(199,125,255,.3);border-radius:18px;box-shadow:0 0 60px rgba(155,48,255,.25);overflow:hidden;backdrop-filter:blur(14px)}
+.bar{display:flex;gap:8px;padding:14px 18px;background:rgba(255,255,255,.04);align-items:center}
+.bar i{width:12px;height:12px;border-radius:50%;display:block}
+.bar span{margin-left:12px;font:12px ui-monospace,monospace;opacity:.5}
+pre{font:14px/1.75 ui-monospace,SFMono-Regular,Menlo,monospace;padding:22px;min-height:380px;white-space:pre-wrap;overflow-x:auto}
+.k{color:#ff4d6d}.s{color:#e0aaff}.f{color:#b980ff}.c{color:#7d6a92}.n{color:#ffd166}
+.out{color:#fff;text-shadow:0 0 12px var(--r)}
+.caret{display:inline-block;width:8px;height:16px;background:var(--r2);vertical-align:-2px;animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+.runrow{margin-top:22px;display:flex;gap:14px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px}
+.card{background:var(--glass);border:1px solid rgba(199,125,255,.2);border-radius:22px;padding:30px 26px;backdrop-filter:blur(10px);transition:transform .15s,border-color .3s,box-shadow .3s;position:relative;overflow:hidden}
+.card:before{content:"";position:absolute;inset:0;background:radial-gradient(300px circle at var(--mx,50%) var(--my,0%),rgba(255,23,68,.22),transparent 60%);opacity:0;transition:opacity .3s}
+.card:hover{border-color:var(--r2);box-shadow:0 20px 60px rgba(155,48,255,.35)}
+.card:hover:before{opacity:1}
+.card .ic{font-size:38px;margin-bottom:16px;filter:drop-shadow(0 0 14px var(--p))}
+.card h3{margin-bottom:8px;font-size:19px}
+.card p{opacity:.7;font-size:14px;line-height:1.65}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:20px;text-align:center;margin-top:60px}
+.stat b{display:block;font-size:clamp(36px,6vw,60px);font-weight:900;background:linear-gradient(var(--p2),var(--r));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat span{font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.6}
+.vid{position:relative;padding-top:56.25%;border-radius:22px;overflow:hidden;border:1px solid rgba(255,23,68,.4);box-shadow:0 0 80px rgba(255,23,68,.3),0 0 120px rgba(155,48,255,.3)}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.eq{display:flex;gap:5px;align-items:flex-end;height:40px;margin:22px 0 14px}
+.eq i{width:6px;background:linear-gradient(var(--r),var(--p));border-radius:3px;animation:eq 1s ease-in-out infinite}
+@keyframes eq{0%,100%{height:8px}50%{height:40px}}
+.eq i:nth-child(2n){animation-duration:.7s}.eq i:nth-child(3n){animation-duration:1.3s}.eq i:nth-child(5n){animation-duration:.55s}
+.final{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 20px}
+#msg{font-size:clamp(24px,4.5vw,46px);font-weight:700;max-width:800px;line-height:1.35;min-height:3em;margin-bottom:40px}
+footer{text-align:center;padding:40px;opacity:.4;font-size:12px;letter-spacing:.2em;position:relative;z-index:2}
+#mute{position:fixed;right:18px;bottom:18px;z-index:50;width:50px;height:50px;border-radius:50%;border:1px solid var(--p2);background:rgba(10,0,20,.7);color:#fff;font-size:20px;cursor:pointer;backdrop-filter:blur(8px);display:none}
+#toast{position:fixed;left:50%;top:22px;transform:translate(-50%,-120px);z-index:60;background:rgba(10,0,20,.85);border:1px solid var(--r2);padding:12px 22px;border-radius:40px;transition:transform .6s;font-size:14px;text-align:center}
+#toast.show{transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas><div class="aurora"></div>
+
+<div id="gate">
+  <div class="heart">❤️‍🔥</div>
+  <h1>Ummeeterh</h1>
+  <p>I wrote something for you. Turn your sound on 🔊</p>
+  <button class="btn" id="enter">Tap to enter</button>
+</div>
+
+<div id="toast"></div>
+<button id="mute" title="Music on/off">🔊</button>
+
+<main>
+<section class="hero">
+  <div class="tag">A project written just for you</div>
+  <h1 class="name" id="name" aria-label="Ummeeterh"></h1>
+  <p class="sub" id="sub"></p>
+  <div class="scroll">SCROLL ↓</div>
+</section>
+
+<section class="wrap reveal">
+  <h2>This is what I <em>do.</em></h2>
+  <p class="lead">I'm a software engineer. I turn ideas into things people can open, touch and feel. You're looking at one right now: every particle and animation on this page is hand-coded. Below is a tiny program I wrote with you in mind. Hit run.</p>
+  <div class="term">
+    <div class="bar"><i style="background:#ff1744"></i><i style="background:#9b30ff"></i><i style="background:#2b0a3d"></i><span>ummeeterh.js — live</span></div>
+<pre id="code"></pre>
+  </div>
+  <div class="runrow">
+    <button class="btn" id="run">▶ Run the program</button>
+    <button class="btn ghost" id="fire">✨ Fireworks</button>
+  </div>
+</section>
+
+<section class="wrap reveal">
+  <h2>The craft, <em>in three acts.</em></h2>
+  <p class="lead">Move your cursor over the cards. Click anywhere on the page for a surprise.</p>
+  <div class="grid">
+    <div class="card tilt"><div class="ic">🧠</div><h3>Think</h3><p>Every product starts as a problem. I break it down, design the architecture and plan the cleanest route from idea to reality.</p></div>
+    <div class="card tilt"><div class="ic">⚡</div><h3>Build</h3><p>Fast, accessible, beautiful interfaces and sturdy back-ends. Clean code that doesn't just work, it feels good to use.</p></div>
+    <div class="card tilt"><div class="ic">🚀</div><h3>Ship</h3><p>Ideas mean nothing until they're live. I deploy, monitor and improve, so what I make reaches real people.</p></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><b data-to="100">0</b><span>% hand-coded</span></div>
+    <div class="stat"><b data-to="1">0</b><span>person this was built for</span></div>
+    <div class="stat"><b data-to="3">0</b><span>favourite colours used</span></div>
+    <div class="stat"><b data-to="999">0</b><span>cups of coffee ☕</span></div>
+  </div>
+</section>
+
+<section class="wrap reveal">
+  <h2>Our <em>soundtrack.</em></h2>
+  <p class="lead">Every good project needs a theme song. This one is APT. by ROSÉ &amp; Bruno Mars.</p>
+  <div class="vid"><iframe id="yt" src="https://www.youtube.com/embed/ekr2nIex040?enablejsapi=1&playsinline=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="APT."></iframe></div>
+  <div class="eq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <p style="opacity:.7">Press play on the video if the music hasn't started. Turn it up. 🎶</p>
+</section>
+
+<section class="final" id="final">
+  <div id="msg"></div>
+  <button class="btn" id="end">Press me one last time</button>
+</section>
+<footer>BUILT WITH CODE, PURPLE, RED &amp; A LITTLE NERVE · FOR UMMEETERH</footer>
+</main>
+
+<script>
+const $=s=>document.querySelector(s);
+const nm=$('#name');
+'Ummeeterh'.split('').forEach((ch,i)=>{const s=document.createElement('span');s.textContent=ch;s.style.animationDelay=(.3+i*.09)+'s';s.style.animationPlayState='paused';nm.appendChild(s)});
+function type(el,text,speed=28){let i=0;(function t(){el.textContent=text.slice(0,++i);if(i<text.length)setTimeout(t,speed)})()}
+
+const cv=$('#bg'),cx=cv.getContext('2d');let W,H,mouse={x:-999,y:-999};
+const cols=['#9b30ff','#c77dff','#ff1744','#ff4d6d','#ffffff'];
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}resize();addEventListener('resize',resize);
+addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
+addEventListener('touchmove',e=>{mouse.x=e.touches[0].clientX;mouse.y=e.touches[0].clientY},{passive:true});
+const N=Math.min(130,Math.floor(innerWidth/9));
+const P=Array.from({length:N},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,r:Math.random()*2+.6,c:cols[Math.random()*cols.length|0]}));
+let sparks=[];
+function boom(x,y,n=90){for(let i=0;i<n;i++){const a=Math.random()*6.283,v=Math.random()*7+2;sparks.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,c:cols[Math.random()*4|0],h:Math.random()<.25})}}
+addEventListener('click',e=>boom(e.clientX,e.clientY,50));
+function loop(){
+  cx.clearRect(0,0,W,H);
+  for(const p of P){
+    const dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.hypot(dx,dy);
+    if(d<140&&d>0){p.x+=dx/d*2;p.y+=dy/d*2}
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+    cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.283);cx.fillStyle=p.c;cx.shadowBlur=12;cx.shadowColor=p.c;cx.fill();
+  }
+  cx.shadowBlur=0;
+  for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){
+    const a=P[i],b=P[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+    if(d<110){cx.strokeStyle=`rgba(199,125,255,${.22*(1-d/110)})`;cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.stroke()}
+  }
+  for(let i=sparks.length-1;i>=0;i--){
+    const s=sparks[i];s.x+=s.vx;s.y+=s.vy;s.vy+=.12;s.vx*=.985;s.l-=.012;
+    if(s.l<=0){sparks.splice(i,1);continue}
+    cx.globalAlpha=s.l;cx.fillStyle=s.c;cx.shadowBlur=10;cx.shadowColor=s.c;
+    if(s.h){cx.font='16px serif';cx.fillText('❤',s.x,s.y)}else{cx.beginPath();cx.arc(s.x,s.y,2.2,0,6.283);cx.fill()}
+  }
+  cx.globalAlpha=1;cx.shadowBlur=0;
+  requestAnimationFrame(loop)
+}loop();
+function fireworks(){let n=0;const t=setInterval(()=>{boom(innerWidth*(.15+Math.random()*.7),innerHeight*(.15+Math.random()*.5),110);if(++n>10)clearInterval(t)},320)}
+
+let yt,ytReady=false,wantPlay=false;
+const tag=document.createElement('script');tag.src='https://www.youtube.com/iframe_api';document.head.appendChild(tag);
+window.onYouTubeIframeAPIReady=()=>{yt=new YT.Player('yt',{events:{onReady:()=>{ytReady=true;if(wantPlay)startMusic()},onStateChange:e=>{$('#mute').textContent=e.data===1?'🔊':'🔇'}}})};
+function startMusic(){wantPlay=true;if(ytReady){yt.setVolume(80);yt.playVideo()}}
+$('#mute').onclick=()=>{if(!ytReady)return;yt.getPlayerState()===1?yt.pauseVideo():yt.playVideo()};
+
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),3500)}
+$('#enter').onclick=()=>{
+  $('#gate').classList.add('out');$('#mute').style.display='block';
+  startMusic();boom(innerWidth/2,innerHeight/2,160);
+  document.querySelectorAll('.name span').forEach(s=>s.style.animationPlayState='running');
+  setTimeout(()=>type($('#sub'),'Hi Ummeeterh 👋  I could have just told you what I do. Instead, I decided to show you.',34),1300);
+  setTimeout(()=>toast('Scroll down. It gets better ↓'),5000);
+};
+
+const code=`<span class="c">// ummeeterh.js — written with you in mind</span>
+<span class="k">const</span> her = {
+  name:    <span class="s">"Ummeeterh"</span>,
+  colours: [<span class="s">"purple"</span>, <span class="s">"red"</span>, <span class="s">"black"</span>],
+  vibe:    <span class="s">"unforgettable"</span>,
+};
+
+<span class="k">function</span> <span class="f">impress</span>(person) {
+  <span class="k">const</span> effort  = <span class="n">Infinity</span>;
+  <span class="k">const</span> sincere = <span class="k">true</span>;
+  <span class="k">if</span> (sincere &amp;&amp; effort) <span class="k">return</span> <span class="s">\`Hey \${person.name}, this one's for you.\`</span>;
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">impress</span>(her));`;
+let typed=false;
+function typeCode(){
+  if(typed)return;typed=true;
+  const el=$('#code');let i=0,out='';
+  (function t(){
+    if(code[i]==='<'){const j=code.indexOf('>',i);out+=code.slice(i,j+1);i=j+1}
+    else if(code[i]==='&'){const j=code.indexOf(';',i);out+=code.slice(i,j+1);i=j+1}
+    else out+=code[i++];
+    el.innerHTML=out+'<span class="caret"></span>';
+    if(i<code.length)setTimeout(t,14);
+  })();
+}
+$('#run').onclick=()=>{
+  typeCode();
+  const el=$('#code');
+  setTimeout(()=>{
+    if(el.innerHTML.includes('node ummeeterh'))return;
+    el.querySelector('.caret')?.remove();
+    el.innerHTML+=`\n\n<span class="c">$ node ummeeterh.js</span>\n<span class="out">Hey Ummeeterh, this one's for you. 💜❤️🖤</span><span class="caret"></span>`;
+  },typed&&el.textContent.length>300?0:3500);
+  fireworks();
+};
+$('#fire').onclick=fireworks;
+
+let finalShown=false;
+function showFinal(){if(finalShown)return;finalShown=true;type($('#msg'),"I build things for a living. But making you smile is the best thing I've built all year.",45)}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;
+  e.target.classList.add('in');
+  e.target.querySelectorAll('[data-to]').forEach(c=>{const to=+c.dataset.to;let v=0;const st=Math.max(1,Math.ceil(to/60));const t=setInterval(()=>{v=Math.min(to,v+st);c.textContent=v;if(v>=to)clearInterval(t)},25)});
+  if(e.target.id==='final')showFinal();
+  if(e.target.querySelector('#code'))typeCode();
+}),{threshold:.25});
+document.querySelectorAll('.reveal,.final').forEach(el=>io.observe(el));
+
+document.querySelectorAll('.tilt').forEach(c=>{
+  c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+    c.style.transform=`perspective(700px) rotateY(${(x-.5)*18}deg) rotateX(${(.5-y)*18}deg) translateZ(10px)`;c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%')});
+  c.addEventListener('mouseleave',()=>c.style.transform='');
+});
+
+$('#end').onclick=()=>{fireworks();toast('Ummeeterh, would you like to grab coffee with me? ☕💜');
+  const m=$('#msg');m.innerHTML='So, Ummeeterh... <span style="background:linear-gradient(90deg,#c77dff,#ff1744);-webkit-background-clip:text;background-clip:text;color:transparent">coffee with the guy who built this?</span> ☕';
+  m.animate([{transform:'scale(.9)',opacity:0},{transform:'scale(1)',opacity:1}],{duration:700,easing:'ease-out'})};
+</script>
+</body>
+</html>
